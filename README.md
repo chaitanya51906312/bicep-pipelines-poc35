@@ -117,3 +117,22 @@ az group delete -n rg-bicep-poc --yes           # manual teardown
 - **`what-if`** = safe preview of changes before applying (like `terraform plan`).
 - **Idempotent:** re-running converges to the declared state (Incremental mode).
 - **`uniqueString()`** generates deterministic globally-unique names from the RG id.
+-What you should do next to complete the POC:
+
+In Azure DevOps, create ARM service connection named azure-arm-connection.
+Create pipeline from azure-pipelines.yml.
+Run with action = deploy.
+Verify resources in RG rg-bicep-poc.
+Run again with action = destroy to tear down.
+Your infra files look good:
+
+main.bicep
+main.dev.bicepparam
+storage.bicep
+appservice.bicep
+If you want, I can next help with one specific part:
+
+Azure DevOps service connection setup
+First deploy run troubleshooting
+Add separate dev and prod parameter files
+Add a manual approval gate before deploy
