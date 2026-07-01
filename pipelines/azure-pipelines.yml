@@ -19,8 +19,8 @@ trigger:
       - main
   paths:
     include:
-      - bicep/*
-      - pipelines/*
+      - bicep/**
+      - pipelines/**
 
 variables:
   azureServiceConnection: "azure-arm-connection" # ARM service connection name
