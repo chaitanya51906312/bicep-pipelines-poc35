@@ -24,13 +24,14 @@ trigger:
 
 variables:
   azureServiceConnection: "azure-arm-connection" # ARM service connection name
+  agentPool: "Default"
   resourceGroup: "demo-rg"
   location: "eastus"
   templateFile: "bicep/main.bicep"
   paramFile: "bicep/main.dev.bicepparam"
 
 pool:
-  vmImage: "ubuntu-latest"
+  name: $(agentPool)
 
 stages:
   # -------------------- VALIDATE --------------------
@@ -44,15 +45,15 @@ stages:
             displayName: "Bicep build (lint) + what-if"
             inputs:
               azureSubscription: $(azureServiceConnection)
-              scriptType: bash
+              scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
-                set -e
+                $ErrorActionPreference = 'Stop'
                 az bicep build --file $(templateFile)
                 az group create --name $(resourceGroup) --location $(location)
-                az deployment group what-if \
-                  --resource-group $(resourceGroup) \
-                  --template-file $(templateFile) \
+                az deployment group what-if `
+                  --resource-group $(resourceGroup) `
+                  --template-file $(templateFile) `
                   --parameters $(paramFile)
 
   # -------------------- DEPLOY --------------------
@@ -72,14 +73,14 @@ stages:
                   displayName: "az deployment group create"
                   inputs:
                     azureSubscription: $(azureServiceConnection)
-                    scriptType: bash
+                    scriptType: pscore
                     scriptLocation: inlineScript
                     inlineScript: |
-                      set -e
-                      az deployment group create \
-                        --resource-group $(resourceGroup) \
-                        --template-file $(templateFile) \
-                        --parameters $(paramFile) \
+                      $ErrorActionPreference = 'Stop'
+                      az deployment group create `
+                        --resource-group $(resourceGroup) `
+                        --template-file $(templateFile) `
+                        --parameters $(paramFile) `
                         --query "properties.outputs" -o json
 
   # -------------------- DESTROY --------------------
@@ -97,8 +98,8 @@ stages:
                   displayName: "Delete resource group"
                   inputs:
                     azureSubscription: $(azureServiceConnection)
-                    scriptType: bash
+                    scriptType: pscore
                     scriptLocation: inlineScript
                     inlineScript: |
-                      set -e
+                      $ErrorActionPreference = 'Stop'
                       az group delete --name $(resourceGroup) --yes --no-wait
