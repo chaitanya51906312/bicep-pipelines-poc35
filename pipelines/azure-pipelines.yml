@@ -88,7 +88,7 @@ stages:
     condition: eq('${{ parameters.action }}', 'destroy')
     jobs:
       - deployment: DestroyInfra
-        environment: "bicep-poc"
+        environment: "bicep-poc-destroy"
         strategy:
           runOnce:
             deploy:
