@@ -24,7 +24,7 @@ trigger:
 
 variables:
   azureServiceConnection: "azure-arm-connection" # ARM service connection name
-  resourceGroup: "rg-bicep-poc"
+  resourceGroup: "demo-rg"
   location: "eastus"
   templateFile: "bicep/main.bicep"
   paramFile: "bicep/main.dev.bicepparam"
